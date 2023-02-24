@@ -58,6 +58,7 @@ public class Menu {
 
     public void mainMenu() {
         int choice;
+        Account account = new Account();
         do {
             System.out.println();
             System.out.println("Введите номер операции");
@@ -72,11 +73,11 @@ public class Menu {
                     this.enrollmentMenu();
                 }
                 case 2 -> {
-                    System.out.println("Выход");
+                    this.withdrawalOfFoundsMenu();
                     return;
                 }
                 case 3 -> {
-                    System.out.println("Выход");
+                    this.checkingTheBalanceMenu();
                     return;
                 }
                 case 4 -> {
@@ -90,7 +91,9 @@ public class Menu {
 
 
     public void enrollmentMenu() {
-        Account account = new Account();
+        System.out.print("Введите ваше имя:");
+        String name = scanner.next();
+        Account account = new Account(name);
         System.out.print("Введите сумму пополнения:");
         Integer money = scanner.nextInt();
         String currencyMoney;
@@ -126,5 +129,21 @@ public class Menu {
                 default -> System.out.println("Некорректный ввод данных");
             }
         } while (true);
+    }
+
+    public void withdrawalOfFoundsMenu() {
+        System.out.print("Введите ваше имя:");
+        String name = scanner.next();
+        Account account = new Account(name);
+        System.out.print("Введите сумму снятия:");
+        Integer money = scanner.nextInt();
+        account.withdrawalOfFounds(name, money);
+    }
+
+    public void checkingTheBalanceMenu() {
+        System.out.print("Введите ваше имя:");
+        String name = scanner.next();
+        Account account = new Account(name);
+        account.checkingTheBalance();
     }
 }
