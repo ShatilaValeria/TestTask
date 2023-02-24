@@ -84,14 +84,4 @@ public class Add {
     public String getAddress() {
         return address;
     }
-    //    public void setRequestForAddUser(String requestForAddUser) {
-//        this.requestForAddUser = requestForAddUser;
-//    }
-
-//    public String getRequestForAddUser() {
-//        CallingTheMenu callingTheMenu = new CallingTheMenu();
-//        String name = callingTheMenu.getName();
-//        String address = callingTheMenu.getAddress();
-//        return registrationRequest(name, address);
-//    }
 }

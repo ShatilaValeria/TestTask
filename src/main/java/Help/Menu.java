@@ -1,11 +1,11 @@
 package Help;
 
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Menu {
 
     Scanner scanner = new Scanner(System.in);
+
     public void startMenu() {
         int choice;
         System.out.println("Добро пожаловать");
@@ -69,7 +69,7 @@ public class Menu {
             choice = scanner.nextInt();
             switch (choice) {
                 case 1 -> {
-                    //this.enrollmentMenu();
+                    this.enrollmentMenu();
                 }
                 case 2 -> {
                     System.out.println("Выход");
@@ -81,7 +81,7 @@ public class Menu {
                 }
                 case 4 -> {
                     System.out.println("Выход");
-                    return;
+                    System.exit(0);
                 }
                 default -> System.out.println("Некорректный ввод данных");
             }
@@ -90,7 +90,7 @@ public class Menu {
 
 
     public void enrollmentMenu() {
-        Account account = new Account("Ваня", "апр0");
+        Account account = new Account();
         System.out.print("Введите сумму пополнения:");
         Integer money = scanner.nextInt();
         String currencyMoney;
@@ -125,6 +125,6 @@ public class Menu {
                 }
                 default -> System.out.println("Некорректный ввод данных");
             }
-        }while(true);
+        } while (true);
     }
 }
