@@ -13,10 +13,12 @@ public class Account {
 
     private String name;
     private String address;
+    private String currencyMoney;
 
-    public Account(String name, String address) {
+    public Account(String name, String address, String currencyMoney) {
         this.name = name;
         this.address = address;
+        this.currencyMoney = currencyMoney;
     }
 
     public Account(String name) {
@@ -27,20 +29,35 @@ public class Account {
     }
 
     public void registrationRequest() {
+        System.out.println(currencyMoney);
         Connection connection = new ConnectionSQL().connection();
         Statement statement;
+        ResultSet resultSet;
         try {
             statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM Users WHERE  name='"
+                    + getName() + "' AND address='" + getAddress() + "';");
+            while (resultSet.next()) {
+                resultSet = statement.executeQuery("SELECT * FROM Accounts WHERE  currency='"
+                        + getCurrencyMoney() + "';");
+                while (resultSet.next()) {
+                    System.out.println("Такой пользователь уже есть в базе данных");
+                    System.out.println();
+                    menu.startMenu();
+                }
+            }
+            statement = connection.createStatement();
             statement.executeUpdate("INSERT INTO Users(name, address)" +
-                    "VALUES('" + name + "', '" + address + "')");
+                    "VALUES('" + getName() + "', '" + getAddress() + "')");
             statement.executeUpdate("INSERT INTO Accounts(userId,  balance, currency)" +
                     "VALUES (" +
-                    "(SELECT userId FROM Users WHERE  name='" + name + "') ,'" + 0 + "', 0);");
+                    "(SELECT userId FROM Users WHERE  name='" + getName() + "') ,'" + 0 + "', '" +
+                    getCurrencyMoney() + "');");
             statement.close();
             connection.close();
             menu.mainMenu();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
         }
     }
 
@@ -53,10 +70,14 @@ public class Account {
             resultSet = statement.executeQuery("SELECT * FROM Users WHERE  name='"
                     + getName() + "' AND address='" + getAddress() + "';");
             while (resultSet.next()) {
-                System.out.println(getName() + " вы успешно вошли в свой аккаунт");
-                statement.close();
-                connection.close();
-                menu.mainMenu();
+                resultSet = statement.executeQuery("SELECT * FROM Accounts WHERE  currency='"
+                        + getCurrencyMoney() + "';");
+                while (resultSet.next()) {
+                    System.out.println(getName() + " вы успешно вошли в свой аккаунт");
+                    statement.close();
+                    connection.close();
+                    menu.mainMenu();
+                }
             }
             System.out.println("У нас нет такого пользователя!");
         } catch (SQLException sqlE) {
@@ -71,6 +92,7 @@ public class Account {
         Connection connection = new ConnectionSQL().connection();
         Statement statement;
         ResultSet resultSet;
+        System.out.println(getName());
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM Users WHERE  name='" +
@@ -91,10 +113,10 @@ public class Account {
                     while (resultSet.next()) {
                         double amount = resultSet.getDouble("amount");
                         double i = balance + amount;
-                        if (i <= 2000000000) {  //(currency.equals(currencyMoney) || currency == null)
+                        if ( i <= 2000000000) {  //(currency.equals(currencyMoney) || currency == null)
                             statement.executeUpdate("UPDATE Accounts SET balance = '" + i + "'" +
                                     "WHERE userId = '" + id + "';");
-                            statement.executeUpdate("UPDATE Accounts SET currency ='" + currencyMoney + "'" +
+                            statement.executeUpdate("UPDATE Accounts SET currency ='" + currency + "'" +
                                     "WHERE userId = '" + id + "';");
                             statement.executeUpdate("UPDATE Transactions SET amount ='" + 0 + "'" +
                                     "WHERE accountId ='" + accountId + "';");
@@ -171,7 +193,7 @@ public class Account {
                 resultSet = statement.executeQuery("SELECT * FROM Accounts WHERE userId='"
                         + id + "';");
                 while (resultSet.next()) {
-                    int balance = resultSet.getInt("balance");
+                    double balance = resultSet.getDouble("balance");
                     System.out.println("Ваш баланс:" + balance);
                     statement.close();
                     connection.close();
@@ -181,6 +203,30 @@ public class Account {
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
         }
+    }
+
+    public void checkingTheUser() {
+        System.out.println(currencyMoney);
+        Connection connection = new ConnectionSQL().connection();
+        Statement statement;
+        ResultSet resultSet;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM Users WHERE  name='"
+                    + getName() + "' AND address='" + getAddress() + "';");
+            while (resultSet.next()) {
+                resultSet = statement.executeQuery("SELECT * FROM Accounts WHERE  currency='"
+                        + getCurrencyMoney() + "';");
+                while (resultSet.next()) {
+                    System.out.println("Такой пользователь уже есть в базе данных");
+                    menu.startMenu();
+                }
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+            return;
+        }
+
     }
 
     public String getName() {
@@ -197,6 +243,14 @@ public class Account {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCurrencyMoney() {
+        return currencyMoney;
+    }
+
+    public void setCurrencyMoney(String currencyMoney) {
+        this.currencyMoney = currencyMoney;
     }
 }
 

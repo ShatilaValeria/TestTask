@@ -37,7 +37,7 @@ public class Menu {
         System.out.println("Регистрация: ");
         System.out.print("Введите ваше имя: ");
         String name = scanner.next();
-        nameUser.add(name);
+        String nameToLowerCase = name.toLowerCase(Locale.ROOT);
         do {
             System.out.println();
             System.out.println("Желаете при  регестрации указать адрес?");
@@ -53,12 +53,14 @@ public class Menu {
                     String numHome = scanner.next();
                     String address = "ул. " + street + " д. " + numHome;
                     String addressToLowerCase = address.toLowerCase(Locale.ROOT);
-                    Account account = new Account(name, addressToLowerCase);
+                    String currency = currencyMoneyMenu();
+                    Account account = new Account(nameToLowerCase, addressToLowerCase, currency);
                     account.registrationRequest();
                     return;
                 }
                 case 2 -> {
-                    Account account = new Account(name, null);
+                    String currency = currencyMoneyMenu();
+                    Account account = new Account(nameToLowerCase, null, currency);
                     account.registrationRequest();
                     return;
                 }
@@ -76,6 +78,7 @@ public class Menu {
         System.out.println("Добро пожаловать");
         System.out.print("Введите ваше имя:");
         String name = scanner.next();
+        String nameToLowerCase = name.toLowerCase(Locale.ROOT);
         do {
             System.out.println();
             System.out.println("Был ли при регистрации указан адрес?");
@@ -91,12 +94,14 @@ public class Menu {
                     String numHome = scanner.next();
                     String address = "ул. " + street + " д. " + numHome;
                     String addressToLowerCase = address.toLowerCase(Locale.ROOT);
-                    Account account = new Account(name, addressToLowerCase);
+                    String currency = currencyMoneyMenu();
+                    Account account = new Account(nameToLowerCase, addressToLowerCase, currency);
                     account.userVerificationRequest();
                     return;
                 }
                 case 2 -> {
-                    Account account = new Account(name, null);
+                    String currency = currencyMoneyMenu();
+                    Account account = new Account(nameToLowerCase, null, currency);
                     account.userVerificationRequest();
                     return;
                 }
@@ -111,7 +116,6 @@ public class Menu {
 
     public void mainMenu() {
         int choice;
-        Account account = new Account();
         do {
             System.out.println();
             System.out.println("Введите номер операции");
@@ -220,5 +224,37 @@ public class Menu {
         String name = scanner.next();
         Account account = new Account(name);
         account.checkingTheBalance();
+    }
+
+    public String currencyMoneyMenu(){
+        String currencyMoney;
+        do {
+            System.out.println();
+            System.out.println("Выбор валюты на данном аккаунте:");
+            System.out.println("1. BYN");
+            System.out.println("2. USD ");
+            System.out.println("3. EUR");
+            System.out.println("4. RYB");
+            int currency = scanner.nextInt();
+            switch (currency) {
+                case 1 -> {
+                    currencyMoney = "BYN";
+                    return currencyMoney;
+                }
+                case 2 -> {
+                    currencyMoney = "USD";
+                    return currencyMoney;
+                }
+                case 3 -> {
+                    currencyMoney = "EYR";
+                    return currencyMoney;
+                }
+                case 4 -> {
+                    currencyMoney = "RYB";
+                    return currencyMoney;
+                }
+                default -> System.out.println("Некорректный ввод данных");
+            }
+        } while (true);
     }
 }
