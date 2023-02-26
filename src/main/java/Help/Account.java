@@ -35,7 +35,7 @@ public class Account {
                     "VALUES('" + name + "', '" + address + "')");
             statement.executeUpdate("INSERT INTO Accounts(userId,  balance, currency)" +
                     "VALUES (" +
-                    "(SELECT userId FROM Users WHERE  name='" + name + "') , 0, 0);");
+                    "(SELECT userId FROM Users WHERE  name='" + name + "') ,'" + 0 + "', 0);");
             statement.close();
             connection.close();
             menu.mainMenu();
@@ -67,7 +67,7 @@ public class Account {
 //                "WHERE name LIKE '" + name + "' AND  address LIKE '" + address + "';");
     }
 
-    public void requestForReplenishment(int money, String currencyMoney) {
+    public void requestForReplenishment(double money, String currencyMoney) {
         Connection connection = new ConnectionSQL().connection();
         Statement statement;
         ResultSet resultSet;
@@ -75,12 +75,12 @@ public class Account {
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM Users WHERE  name='" +
                     getName() + "';");
-            int id = resultSet.getInt("userId");
             while (resultSet.next()) {
+                int id = resultSet.getInt("userId");
                 resultSet = statement.executeQuery("SELECT * FROM Accounts WHERE userId='"
                         + id + "';");
                 while (resultSet.next()) {
-                    Integer balance = resultSet.getInt("balance");
+                    double balance = resultSet.getDouble("balance");
                     String currency = resultSet.getString("currency");
                     int accountId = resultSet.getInt("accountId");
                     statement.executeUpdate("UPDATE Transactions SET accountId ='" + accountId + "';");
@@ -89,36 +89,35 @@ public class Account {
                     resultSet = statement.executeQuery("SELECT * FROM Transactions WHERE accountId='"
                             + accountId + "';");
                     while (resultSet.next()) {
-                        int amount = resultSet.getInt("amount");
-                        int i = balance + amount;
-                        if (currency.equals(currencyMoney) && i <= 2000000000) {
+                        double amount = resultSet.getDouble("amount");
+                        double i = balance + amount;
+                        if (i <= 2000000000) {  //(currency.equals(currencyMoney) || currency == null)
                             statement.executeUpdate("UPDATE Accounts SET balance = '" + i + "'" +
                                     "WHERE userId = '" + id + "';");
                             statement.executeUpdate("UPDATE Accounts SET currency ='" + currencyMoney + "'" +
                                     "WHERE userId = '" + id + "';");
                             statement.executeUpdate("UPDATE Transactions SET amount ='" + 0 + "'" +
                                     "WHERE accountId ='" + accountId + "';");
+                            System.out.println(getName() + " ваш баланс успешно пополнен");
                         } else {
                             System.out.println("Проблемы с валютой");
                         }
                         statement.close();
                         connection.close();
-                        System.out.println(getName() + " ваш баланс успешно пополнен");
                         menu.mainMenu();
                     }
                 }
+                System.out.println("Что-то не так");
             }
-            System.out.println("Что-то не так");
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
         }
     }
 
-    public void withdrawalOfFounds(String name, Integer money) {
+    public void withdrawalOfFounds(String name, double money) {
         Connection connection = new ConnectionSQL().connection();
         Statement statement;
         ResultSet resultSet;
-        System.out.println(name);
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM Users WHERE  name='" +
@@ -128,7 +127,7 @@ public class Account {
                 resultSet = statement.executeQuery("SELECT * FROM Accounts WHERE userId='"
                         + id + "';");
                 while (resultSet.next()) {
-                    int balance = resultSet.getInt("balance");
+                    double balance = resultSet.getInt("balance");
                     int accountId = resultSet.getInt("accountId");
                     statement.executeUpdate("UPDATE Transactions SET accountId ='" + accountId + "';");
                     statement.executeUpdate("UPDATE Transactions SET amount ='" + money + "'" +
@@ -136,9 +135,9 @@ public class Account {
                     resultSet = statement.executeQuery("SELECT * FROM Transactions WHERE accountId='"
                             + accountId + "';");
                     while (resultSet.next()) {
-                        int amount = resultSet.getInt("amount");
+                        double amount = resultSet.getInt("amount");
                         if (balance >= amount) {
-                            int moneyNow = balance - amount;
+                            double moneyNow = balance - amount;
                             statement.executeUpdate("UPDATE Accounts SET balance = '" + moneyNow + "'" +
                                     "WHERE userId = '" + id + "';");
                             System.out.println(getName() + " ваши деньги...");

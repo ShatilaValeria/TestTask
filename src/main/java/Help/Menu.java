@@ -1,6 +1,7 @@
 package Help;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Menu {
@@ -50,8 +51,9 @@ public class Menu {
                     String street = scanner.next();
                     System.out.print("Введите номер вашего дома: ");
                     String numHome = scanner.next();
-                    String address = street + numHome;
-                    Account account = new Account(name, address);
+                    String address = "ул. " + street + " д. " + numHome;
+                    String addressToLowerCase = address.toLowerCase(Locale.ROOT);
+                    Account account = new Account(name, addressToLowerCase);
                     account.registrationRequest();
                     return;
                 }
@@ -87,8 +89,9 @@ public class Menu {
                     String street = scanner.next();
                     System.out.print("Введите номер вашего дома: ");
                     String numHome = scanner.next();
-                    String address = street + numHome;
-                    Account account = new Account(name, address);
+                    String address = "ул. " + street + " д. " + numHome;
+                    String addressToLowerCase = address.toLowerCase(Locale.ROOT);
+                    Account account = new Account(name, addressToLowerCase);
                     account.userVerificationRequest();
                     return;
                 }
@@ -121,6 +124,7 @@ public class Menu {
             switch (choice) {
                 case 1 -> {
                     this.enrollmentMenu();
+                    return;
                 }
                 case 2 -> {
                     this.withdrawalOfFoundsMenu();
@@ -145,13 +149,13 @@ public class Menu {
         String name = scanner.next();
         Account account = new Account(name);
         System.out.print("Введите сумму пополнения\n" +
-                "\"Разделение челого от дробного при ромощи ','\"");
+                "Разделение целого от дробного при помощи ','\n");
         double money = scanner.nextDouble();
         if (money >= 100000000) {
             System.out.println("Операция невозможна \n" +
                     "Размер суммы не может привышать 100'000'000");
             return;
-        } else if((money * 10000)% 10 == 0) {
+        } else if(money * 10000 % 10 == 0) {
             String currencyMoney;
             do {
                 System.out.println();
@@ -164,22 +168,21 @@ public class Menu {
                 switch (currency) {
                     case 1 -> {
                         currencyMoney = "BYN";
-                        //account.requestForReplenishment(money, currencyMoney);
-                        return;
+                        account.requestForReplenishment(money, currencyMoney);
                     }
                     case 2 -> {
                         currencyMoney = "USD";
-                       // account.requestForReplenishment(money, currencyMoney);
+                        account.requestForReplenishment(money, currencyMoney);
                         return;
                     }
                     case 3 -> {
                         currencyMoney = "EYR";
-                        //account.requestForReplenishment(money, currencyMoney);
+                        account.requestForReplenishment(money, currencyMoney);
                         return;
                     }
                     case 4 -> {
                         currencyMoney = "RYB";
-                        //account.requestForReplenishment(money, currencyMoney);
+                        account.requestForReplenishment(money, currencyMoney);
                         return;
                     }
                     default -> System.out.println("Некорректный ввод данных");
@@ -188,7 +191,7 @@ public class Menu {
         } else {
             System.out.println("Дробная часть чисел может быть ограничена 3 знаками\n " +
                     "У вас больше\n" +
-                    "Разделение челого от дробного при ромощи ','");
+                    "Разделение целого от дробного при помощи ','");
         }
     }
 
@@ -197,13 +200,19 @@ public class Menu {
         String name = scanner.next();
         Account account = new Account(name);
         System.out.print("Введите сумму снятия:");
-        int money = scanner.nextInt();
+        double money = scanner.nextDouble();
         if (money >= 100000000) {
             System.out.println("Операция невозможна \n" +
                     "Размер суммы не может привышать 100'000'000");
             return;
+        } else if((money * 10000) % 10 != 0) {
+            System.out.println("Дробная часть чисел может быть ограничена 3 знаками\n " +
+                    "У вас больше\n" +
+                    "Разделение целого от дробного при помощи ','");
+            return;
+        } else {
+            account.withdrawalOfFounds(name, money);
         }
-        account.withdrawalOfFounds(name, money);
     }
 
     public void checkingTheBalanceMenu() {
