@@ -1,5 +1,3 @@
-package Help;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,6 +24,7 @@ public class Account {
     }
 
     public Account() {
+        this.name = getName();
     }
 
     public void registrationRequest() {
@@ -70,6 +69,7 @@ public class Account {
             resultSet = statement.executeQuery("SELECT * FROM Users WHERE  name='"
                     + getName() + "' AND address='" + getAddress() + "';");
             while (resultSet.next()) {
+                int id = resultSet.getInt("userId");
                 resultSet = statement.executeQuery("SELECT * FROM Accounts WHERE  currency='"
                         + getCurrencyMoney() + "';");
                 while (resultSet.next()) {
@@ -83,9 +83,6 @@ public class Account {
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
         }
-//            statement.executeQuery("SELECT * FROM Users WHERE  name LIKE'" + name + "'");
-//            statement.execute("SELECT * FROM  Users" +
-//                "WHERE name LIKE '" + name + "' AND  address LIKE '" + address + "';");
     }
 
     public void requestForReplenishment(double money, String currencyMoney) {

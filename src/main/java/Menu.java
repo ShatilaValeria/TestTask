@@ -1,13 +1,9 @@
-package Help;
-
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Menu {
 
     Scanner scanner = new Scanner(System.in);
-    ArrayList<String> nameUser = new ArrayList<>();
 
     public void startMenu() {
         int choice;
