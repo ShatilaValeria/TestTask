@@ -2,7 +2,6 @@ import java.io.IOException;
 
 public class Controller {
     public void start() {
-        CurrentTime currentTime = new CurrentTime();
         Check check = new Check();
         WritingToFile writingToFile = new WritingToFile();
         Timeout time = new Timeout();
@@ -10,9 +9,9 @@ public class Controller {
 
         while (true) {
             //Получаем секунды от текущего времени
-            currentTime.timeInSeconds();
+            check.currentTimeInSeconds();
             //Проверяем чётная ли секуда
-            check.checkSeconds(currentTime.getSeconds());
+            check.checkSeconds(check.getSeconds());
             //Получаем имя нужного файла
             nameFile = check.getFileName();
             //Записывем в файл сгенерированное число

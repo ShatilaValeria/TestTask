@@ -3,12 +3,19 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Check {
 
+    private int seconds;
     private String fileName;
-    Menu menu = new Menu();
+
+    public void currentTimeInSeconds() {
+        LocalDateTime now = LocalDateTime.now();
+        seconds = now.getSecond();
+        setSeconds(seconds);
+    }
 
     public void checkSeconds(int seconds) {
         if (seconds % 2 == 0) {
@@ -25,11 +32,18 @@ public class Check {
             try {
                 PrintWriter pw = new PrintWriter(nameFile);
                 pw.close();
-                menu.mainMenu();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
+
+    public int getSeconds() {
+        return seconds;
     }
 
     public String getFileName() {
